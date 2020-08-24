@@ -3,6 +3,7 @@ const AuthService = require('./auth-router');
 
 const authRouter = express.Router();
 // const authService = new AuthService();
+authRouter.use(express.json());
 
 authRouter.route('/login').post(async (req, res, next) => {
   const { id, username, password, email } = req.body;

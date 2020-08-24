@@ -6,7 +6,10 @@ const cors = require('cors');
 const helmet = require('helmet');
 
 const { NODE_ENV } = require('./config');
+
+const authRouter = require('./routes/auth/auth-router');
 const employeeRouter = require('./routes/employee/employee-route');
+const usersRouter = require('./routes/users/users-router');
 
 const errorHandler = require('./middleware/error-handler');
 const validateToken = require('./middleware/validate-token');
@@ -24,7 +27,9 @@ app.use(validateToken);
 
 app.use(express.json());
 
-app.use('/api', employeeRouter);
+app.use('/api/employees', employeeRouter);
+app.use('/api/auth', authRouter);
+app.use('/api/users', usersRouter);
 
 app.use(errorHandler);
 
