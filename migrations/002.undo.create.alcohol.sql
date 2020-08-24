@@ -1,0 +1,2 @@
+DROP TABLE IF EXISTS alcohol;
+DROP TYPE IF EXISTS alcohol_type;
