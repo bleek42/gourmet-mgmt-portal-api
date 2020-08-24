@@ -1,6 +1,6 @@
 const express = require('express');
 
-const logger = require('../middleware/logger');
+const logger = require('../../middleware/logger');
 const EmployeeService = require('./employee-service');
 
 const employeeRouter = express.Router();
@@ -14,7 +14,6 @@ employeeRouter.route('/employee').get(async (req, res, next) => {
         error: 'Cannot GET employees!',
       });
     }
-    console.log(employees);
     res.status(200).json(employees);
   } catch (err) {
     next(err);
@@ -24,7 +23,10 @@ employeeRouter.route('/employee').get(async (req, res, next) => {
 employeeRouter.get('/employee/:id', async (req, res, next) => {
   try {
     const { id } = req.params.id;
-    const person = await EmployeeService.getById(req.app.get('db'), id);
+    const person = await EmployeeService.getById(
+      req.app.get('db'),
+      id
+    );
     if (!person) {
       logger.error(`cannot find an employee with id ${id}`);
       res.status(400).json({
