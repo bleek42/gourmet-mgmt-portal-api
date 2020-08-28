@@ -1,5 +1,7 @@
+
 const EmployeeService = {
   getAll(db) {
+
     return db.select('*').from('employee');
   },
   getById(db, id) {

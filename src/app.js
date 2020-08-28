@@ -25,6 +25,7 @@ app.use(validateToken);
 app.use(express.json());
 
 app.use('/api', employeeRouter);
+app.use('/api/alcohol', alcoholRouter);
 
 app.use(errorHandler);
 
