@@ -1,15 +1,11 @@
-const { NODE_ENV } = require('../config');
+const HttpException = require('../utils/http-exception');
 
-// eslint-disable-next-line no-unused-vars
-const errorHandler = (error, req, res, next) => {
-  let response;
-  if (NODE_ENV === 'production') {
-    response = { error: { message: 'Server error' } };
-  } else {
-    response = { message: error.message, error };
-  }
+const errorHandler = (error = new HttpException(), req, res, next) => {
+  const status = error.statusCode || 500;
+  const message = error.message || 'Internal Server Error';
 
-  res.status(500).json(response);
+  res.status(status).send(message);
+  next();
 };
 
 module.exports = errorHandler;
