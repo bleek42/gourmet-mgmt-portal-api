@@ -1,6 +1,7 @@
 const HttpException = require('../utils/http-exception');
 
-const errorHandler = (error = new HttpException(), req, res, next) => {
+const errorHandler = (error, req, res, next) => {
+  error = new HttpException();
   const status = error.statusCode || 500;
   const message = error.message || 'Internal Server Error';
 

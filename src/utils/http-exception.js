@@ -5,3 +5,5 @@ class HttpException {
     this.error = error;
   }
 }
+
+module.exports = HttpException;

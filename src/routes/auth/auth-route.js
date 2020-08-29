@@ -1,5 +1,5 @@
 const express = require('express');
-const AuthService = require('./auth-router');
+const AuthService = require('./auth-service');
 
 const authRouter = express.Router();
 // const authService = new AuthService();
@@ -17,16 +17,15 @@ authRouter.route('/login').post(async (req, res, next) => {
     }
     try {
       const db = req.app.get('db');
-      const authService = new AuthService();
-      const userInDb = await authService.getUserName(db, reqUser.username);
+      const userInDb = await AuthService.getUserName(db, reqUser.username);
       if (!userInDb) {
         res.status(400).json({
           message: 'Incorrect username and/or password!',
         });
       }
-      const isPassword = await authService.comparePassword(
+      const isPassword = await AuthService.comparePassword(
         reqUser.password,
-        userInDb.password
+        userInDb.password,
       );
       if (!isPassword) {
         res.status(400).json({
@@ -38,7 +37,7 @@ authRouter.route('/login').post(async (req, res, next) => {
         id: userInDb.id,
       };
       res.status(200).json({
-        authToken: authService.createJwt(subject, payload),
+        authToken: AuthService.createJwt(subject, payload),
         id: userInDb.id,
       });
     } catch (error) {

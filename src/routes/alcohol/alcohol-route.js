@@ -1,6 +1,6 @@
 const express = require('express');
 //const xss = require('xss');
-const AlcoholService = require('./alcohol-service');
+const alcoholService = require('./alcohol-service');
 
 const alcoholRouter = express.Router();
 
@@ -15,12 +15,9 @@ const serializeAlcohol = (alcohol) => ({
 });
 */
 
-alcoholRouter.route('/alcohol').get(async (req, res, next) => {
+alcoholRouter.route('/').get(async (req, res, next) => {
   try {
-    const alcoholService = new AlcoholService();
-    const alcohol = await alcoholService.getAllAlcohol(
-      req.app.get('db')
-    );
+    const alcohol = await alcoholService.getAllAlcohol(req.app.get('db'));
     if (!alcohol) {
       res.status(400).json({
         error: 'Cannot GET alcohol!',
@@ -33,10 +30,9 @@ alcoholRouter.route('/alcohol').get(async (req, res, next) => {
   }
 });
 
-alcoholRouter.route('/alcohol/:id', async (req, res, next) => {
+alcoholRouter.route('/:id', async (req, res, next) => {
   try {
     const { id } = req.params.id;
-    const alcoholService = new AlcoholService();
     const order = await alcoholService.getById(req.app.get('db'), id);
     if (!order) {
       res.status(400).json({

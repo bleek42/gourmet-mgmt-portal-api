@@ -5,6 +5,5 @@ CREATE TABLE alcohol (
   type alcohol_type NOT NULL,
   price NUMERIC(10,2) NOT NULL,
   name VARCHAR(255) NOT NULL,
-  quantity INTEGER NOT NULL,
-  date_ordered TIMESTAMPTZ DEFAULT now() NOT NULL
+  quantity INTEGER NOT NULL
 );
