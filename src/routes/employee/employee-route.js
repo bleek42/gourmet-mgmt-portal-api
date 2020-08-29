@@ -1,7 +1,7 @@
 const express = require('express');
 
 const employeeService = require('./employee-service');
-const { HttpException } = require('../../middleware/error-handler');
+const HttpException = require('../../utils/http-exception');
 
 const employeeRouter = express.Router();
 
@@ -14,7 +14,7 @@ employeeRouter.route('/employee').get(async (req, res, next) => {
     res.status(200).json(employees);
     next();
   } catch (err) {
-    throw new HttpException(500, 'Internal server error!');
+    throw new HttpException('Internal server error!');
   }
 });
 
@@ -28,7 +28,7 @@ employeeRouter.get('/employee/:id', async (req, res, next) => {
     res.status(200).json(person);
     next();
   } catch (err) {
-    throw new HttpException(500, 'Internal server error!');
+    throw new HttpException('Internal server error!');
   }
 });
 
