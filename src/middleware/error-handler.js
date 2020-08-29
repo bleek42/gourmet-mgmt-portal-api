@@ -1,8 +1,8 @@
-const errorHandler = (err, res) => {
+const HttpException = require('../utils/http-exception');
+
+const errorHandler = (err = new HttpException(), res) => {
   const { statusCode, message } = err;
   res.status(statusCode).json({
-    status: 'Error',
-    statusCode,
     message,
   });
 };
