@@ -40,8 +40,8 @@ authRouter.route('/login').post(async (req, res, next) => {
         authToken: AuthService.createJwt(subject, payload),
         id: userInDb.id,
       });
-    } catch (error) {
-      res.status(error.statusCode).send(error.message);
+    } catch (err) {
+      res.status(err.statusCode).send(err.message);
       next();
     }
   }

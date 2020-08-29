@@ -1,39 +1,34 @@
 const express = require('express');
 
-const EmployeeService = require('./employee-service');
+const employeeService = require('./employee-service');
+const { HttpException } = require('../../middleware/error-handler');
 
 const employeeRouter = express.Router();
-employeeRouter.use(express.json());
 
 employeeRouter.route('/employee').get(async (req, res, next) => {
   try {
-    const employees = await EmployeeService.getAll(req.app.get('db'));
+    const employees = await employeeService.getAll(req.app.get('db'));
     if (!employees) {
-      res.status(400).json({
-        error: 'Cannot GET employees!',
-      });
+      throw new HttpException(404, 'Cannot find employees!');
     }
     res.status(200).json(employees);
-  } catch (error) {
-    res.status(error.statusCode).send(error.message);
     next();
+  } catch (err) {
+    throw new HttpException(500, 'Internal server error!');
   }
 });
 
 employeeRouter.get('/employee/:id', async (req, res, next) => {
   try {
     const { id } = req.params.id;
-
-    const person = await EmployeeService.getById(req.app.get('db'), id);
+    const person = await employeeService.getById(req.app.get('db'), id);
     if (!person) {
-      res.status(400).json({
-        message: `Cannot GET Employee ID ${id}`,
-      });
+      throw new HttpException(404, `Cannot GET Employee ID ${id}`);
     }
     res.status(200).json(person);
-  } catch (error) {
-    res.status(error.statusCode).send(error.message);
     next();
+  } catch (err) {
+    throw new HttpException(500, 'Internal server error!');
   }
 });
 

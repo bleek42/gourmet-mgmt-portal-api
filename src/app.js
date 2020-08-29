@@ -11,8 +11,9 @@ const authRouter = require('./routes/auth/auth-route');
 const employeeRouter = require('./routes/employee/employee-route');
 const alcoholRouter = require('./routes/alcohol/alcohol-route');
 
-const errorHandler = require('./middleware/error-handler');
 const validateToken = require('./middleware/validate-token');
+const { errorHandler } = require('./middleware/error-handler');
+// const validateToken = require('./middleware/validate-token');
 
 const app = express();
 
@@ -27,10 +28,12 @@ app.use(validateToken);
 
 app.use(express.json());
 
-// app.use('/api', authRouter);
+app.use('/api', authRouter);
 app.use('/api', employeeRouter);
 app.use('/api', alcoholRouter);
 
-app.use(errorHandler);
+app.use((err, req, res) => {
+  errorHandler(err, res);
+});
 
 module.exports = app;

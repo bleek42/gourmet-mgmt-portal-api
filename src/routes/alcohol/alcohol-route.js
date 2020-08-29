@@ -24,8 +24,8 @@ alcoholRouter.route('/').get(async (req, res, next) => {
       });
     }
     res.status(200).json(alcohol);
-  } catch (error) {
-    res.status(error.statusCode).send(error.message);
+  } catch (err) {
+    res.status(err.statusCode).send(err.message);
     next();
   }
 });
@@ -39,8 +39,8 @@ alcoholRouter.route('/:id', async (req, res, next) => {
         message: `Cannot GET alcohol order ID ${id}`,
       });
     }
-  } catch (error) {
-    res.status(error.statusCode).send(error.message);
+  } catch (err) {
+    res.status(err.statusCode).send(err.message);
     next();
   }
 });

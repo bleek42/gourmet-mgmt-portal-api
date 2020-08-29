@@ -1,12 +1,21 @@
-const HttpException = require('../utils/http-exception');
+class HttpException extends Error {
+  constructor(statusCode, message) {
+    super();
+    this.statusCode = statusCode;
+    this.message = message;
+  }
+}
 
-const errorHandler = (error, req, res, next) => {
-  error = new HttpException();
-  const status = error.statusCode || 500;
-  const message = error.message || 'Internal Server Error';
-
-  res.status(status).send(message);
-  next();
+const errorHandler = (err, res) => {
+  const { statusCode, message } = err;
+  res.status(statusCode).json({
+    status: 'Error',
+    statusCode,
+    message,
+  });
 };
 
-module.exports = errorHandler;
+module.exports = {
+  HttpException,
+  errorHandler,
+};

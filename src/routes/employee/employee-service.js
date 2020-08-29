@@ -1,7 +1,5 @@
-
-const EmployeeService = {
+const employeeService = {
   getAll(db) {
-
     return db.select('*').from('employee');
   },
   getById(db, id) {
@@ -9,4 +7,4 @@ const EmployeeService = {
   },
 };
 
-module.exports = EmployeeService;
+module.exports = employeeService;
