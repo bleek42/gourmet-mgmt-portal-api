@@ -15,7 +15,7 @@ const serializeAlcohol = (alcohol) => ({
 });
 */
 
-alcoholRouter.route('/').get(async (req, res, next) => {
+alcoholRouter.route('/alcohol').get(async (req, res, next) => {
   try {
     const alcohol = await alcoholService.getAllAlcohol(req.app.get('db'));
     if (!alcohol) {
@@ -25,23 +25,22 @@ alcoholRouter.route('/').get(async (req, res, next) => {
     }
     res.status(200).json(alcohol);
   } catch (err) {
-    res.status(err.statusCode).send(err.message);
-    next();
+    next(err);
   }
 });
 
-alcoholRouter.route('/:id', async (req, res, next) => {
+alcoholRouter.route('/alcohol/:id').get(async (req, res, next) => {
   try {
-    const { id } = req.params.id;
-    const order = await alcoholService.getById(req.app.get('db'), id);
-    if (!order) {
+    const id = req.params.id;
+    const item = await alcoholService.getById(req.app.get('db'), id);
+    if (!item) {
       res.status(400).json({
         message: `Cannot GET alcohol order ID ${id}`,
       });
     }
+    res.status(200).json(item);
   } catch (err) {
-    res.status(err.statusCode).send(err.message);
-    next();
+    next(err);
   }
 });
 

@@ -4,7 +4,7 @@ const alcoholService = {
   },
 
   getById(db, id) {
-    return db('alcohol').select('*').where('alcohol.id', id);
+    return db.select('*').from('alcohol').where({ id }).first()
   },
 };
 

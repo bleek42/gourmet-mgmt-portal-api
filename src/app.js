@@ -21,14 +21,16 @@ const app = express();
 
 const morganOption = NODE_ENV === 'production' ? 'tiny' : 'common';
 
-// set up middleware
 app.use(morgan(morganOption));
 
 app.use(helmet());
 app.use(cors());
-app.use(validateToken);
 
 app.use(express.json());
+
+app.use(validateToken);
+
+
 
 app.use('/api', authRouter);
 app.use('/api', employeeRouter);
