@@ -2,12 +2,11 @@ const express = require('express');
 const AuthService = require('./auth-service');
 
 const authRouter = express.Router();
-// const authService = new AuthService();
 
 authRouter.route('/login').post(async (req, res, next) => {
-  const { id, username, password, email } = req.body;
+  const { username, password, email } = req.body;
 
-  const reqUser = { id, username, password, email };
+  const reqUser = { username, password, email };
 
   for (const [key, value] of Object.entries(reqUser)) {
     if (!value) {
@@ -41,7 +40,11 @@ authRouter.route('/login').post(async (req, res, next) => {
         id: userInDb.id,
       });
     } catch (err) {
-      res.status(err.statusCode).send(err.message);
+      if (err) {
+        res.status(statusCode).json({
+          error: err.message
+        })
+      }
       next();
     }
   }
