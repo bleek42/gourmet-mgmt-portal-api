@@ -25,7 +25,10 @@ alcoholRouter.route('/alcohol').get(async (req, res, next) => {
     }
     res.status(200).json(alcohol);
   } catch (err) {
-    next(err);
+    if (err) {
+      res.status(err.statusCode).json({ error: err.message })
+    }
+    next();
   }
 });
 
