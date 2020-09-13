@@ -19,23 +19,42 @@ usersRouter.route('/users/:id').get(async (req, res, next) => {
   }
 });
 
-usersRouter.route('users').post(async (req, res, next) => {
-
+usersRouter.route('/users/new').post(async (req, res, next) => {
   const { username, password, email } = req.body;
 
   for (const values of ['username', 'password', 'email']) {
     if (!req.body[values]) {
       throw new HttpException(400, `Missing ${values} in request body!`);
     }
+  }
+  try {
+    const passWordErr = await UsersService.validatePassword(password);
 
-    try {
-      const passWordErr = await UsersService.validatePassword(password);
-
-      if (passWordErr) {
-        throw new HttpException(400, `${password} does not meet requirements`);
-      }
-      res.status(200).send('it works!')
-    } catch (err) {
-      next(err);
+    if (passWordErr) {
+      throw new HttpException(400, `${password} does not meet requirements`);
     }
-  })
+
+    const isExistingUser = await UsersService.checkUsers(req.app.get('db', username));
+    if (isExistingUser) {
+      throw new HttpException(400, `${username} is already taken!`);
+    }
+
+    const hashedPassword = await UsersService.hashPassword(password);
+
+    const newUser = {
+      username,
+      password: hashedPassword,
+      email,
+    };
+
+    const userToAdd = await UsersService.insertUser(req.app.get('db'), newUser);
+
+    res.status(201)
+      .location(path.posix.join('/login'))
+      .json(UsersService.sanitizeUser(userToAdd));
+  } catch (err) {
+    next(err);
+  }
+});
+
+module.exports = usersRouter;
