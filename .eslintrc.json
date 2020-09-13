@@ -12,6 +12,9 @@
     "linebreak-style": "off",
     "brace-style": "warn",
     "strict": "off",
-    "semi-style": "warn"
+    "semi-style": "warn",
+    "no-console": "warn",
+    "no-unused-vars": "warn",
+    "no-restricted-syntax": "off"
   }
 }

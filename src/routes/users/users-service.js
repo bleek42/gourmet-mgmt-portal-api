@@ -3,6 +3,12 @@ const xss = require('xss');
 
 const UsersService = {
 
+  getUser(knex, id) {
+    return knex('users')
+      .where({ id })
+      .first();
+  },
+
   checkUsers(knex, username) {
     return knex('users')
       .where({ username })
@@ -34,6 +40,7 @@ const UsersService = {
         console.error('password must contain an uppercase, lowercase, number, & special character');
         break;
       default:
+        console.assert(password ? console.info(`${password} passed`) : console.info(`${password} failed`));
     }
   },
 
