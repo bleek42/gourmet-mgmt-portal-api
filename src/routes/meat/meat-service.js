@@ -1,11 +1,17 @@
-const meatService = {
+const MeatService = {
   getAllMeat(db) {
-    return db('meat').select('*');
+    return db
+      .select('*')
+      .from('meat');
   },
 
   getById(db, id) {
-    return db('meat').select('*').where('meat.id', id);
+    return db
+      .select('*')
+      .from('meat')
+      .where({ id })
+      .first();
   },
 };
 
-module.exports = meatService;
+module.exports = MeatService;

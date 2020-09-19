@@ -15,6 +15,7 @@
     "semi-style": "warn",
     "no-console": "warn",
     "no-unused-vars": "warn",
-    "no-restricted-syntax": "off"
+    "no-restricted-syntax": "off",
+    "new-cap": "off"
   }
 }

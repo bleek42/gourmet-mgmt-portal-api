@@ -9,9 +9,12 @@ const usersRouter = express.Router();
 usersRouter.route('/users/:id').get(async (req, res, next) => {
   try {
     const { id } = req.params;
+    console.log(id);
     const user = await UsersService.getUser(id);
     if (!user) {
-      throw new HttpException(404, `Cannot GET employee ${id}`);
+      res.status(404).json({
+        Error: `Cannot find user number ${id}`,
+      });
     }
     res.status(200).json(user);
   } catch (err) {
@@ -21,22 +24,26 @@ usersRouter.route('/users/:id').get(async (req, res, next) => {
 
 usersRouter.route('/users/new').post(async (req, res, next) => {
   const { username, password, email } = req.body;
-
-  for (const values of ['username', 'password', 'email']) {
+  console.log(username, email, password);
+  for (const values of ['username', 'email', 'password']) {
     if (!req.body[values]) {
-      throw new HttpException(400, `Missing ${values} in request body!`);
+      res.status(400).json({
+        Error: `Missing ${values} in request body!`,
+      });
     }
   }
   try {
     const passWordErr = await UsersService.validatePassword(password);
-
+    console.log(passWordErr);
     if (passWordErr) {
-      throw new HttpException(400, `${password} does not meet requirements`);
+      res.status(400).json({ Error: `${password} does not meet requirements` });
     }
 
     const isExistingUser = await UsersService.checkUsers(req.app.get('db', username));
     if (isExistingUser) {
-      throw new HttpException(400, `${username} is already taken!`);
+      res.status(400).json({
+        Error: `${username} is taken by an existing user!`,
+      });
     }
 
     const hashedPassword = await UsersService.hashPassword(password);
@@ -50,7 +57,7 @@ usersRouter.route('/users/new').post(async (req, res, next) => {
     const userToAdd = await UsersService.insertUser(req.app.get('db'), newUser);
 
     res.status(201)
-      .location(path.posix.join('/login'))
+      .location(path.posix.join(req.originalUrl, `/${userToAdd.id}`))
       .json(UsersService.sanitizeUser(userToAdd));
   } catch (err) {
     next(err);

@@ -2,22 +2,25 @@ const bcrypt = require('bcrypt');
 const xss = require('xss');
 
 const UsersService = {
-
-  getUser(knex, id) {
-    return knex('users')
+  getUser(db, id) {
+    console.log(db, id, 'getUser');
+    return db
+      .select('*')
+      .from('users')
       .where({ id })
       .first();
   },
 
-  checkUsers(knex, username) {
-    return knex('users')
+  checkUsers(db, username) {
+    return db
+      .select('users')
       .where({ username })
       .first()
       .then((user) => !!user);
   },
 
-  insertUser(knex, newUser) {
-    return knex
+  insertUser(db, newUser) {
+    return db
       .insert(newUser)
       .into('users')
       .returning('*')
@@ -25,23 +28,10 @@ const UsersService = {
   },
 
   validatePassword(password) {
-    const PW_REGEX = new RegExp(/(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&])[\S]+/);
-    switch (password) {
-      case password.length < 8:
-        console.error('password must be greater than 8 characters');
-        break;
-      case password.length > 20:
-        console.error('password must be less than 20 characters');
-        break;
-      case password.startsWith(' ') || password.endsWith(' '):
-        console.error('password cannot start/end with a blank space');
-        break;
-      case !PW_REGEX.test(password):
-        console.error('password must contain an uppercase, lowercase, number, & special character');
-        break;
-      default:
-        console.assert(password ? console.info(`${password} passed`) : console.info(`${password} failed`));
-    }
+    // eslint-disable-next-line no-useless-escape
+    console.log(password);
+    const PW_REGEX = new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})');
+    return PW_REGEX.test(password) ? console.info(`${password} passes!`) : console.error(`${password} fails!`);
   },
 
   hashPassword(password) {
