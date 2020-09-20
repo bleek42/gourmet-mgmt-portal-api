@@ -1,30 +1,30 @@
+/* eslint-disable no-await-in-loop */
 const express = require('express');
+
 const AuthService = require('./auth-service');
+const { requireAuth } = require('../../middleware/jwt-auth');
 
 const authRouter = express.Router();
-// const authService = new AuthService();
 
 authRouter.route('/login').post(async (req, res, next) => {
-  const { id, username, password, email } = req.body;
-
-  const reqUser = { id, username, password, email };
-
-  for (const [key, value] of Object.entries(reqUser)) {
+  const { username, password } = req.body;
+  const logins = { username, password };
+  for (const [key, value] of Object.entries(logins)) {
     if (!value) {
       res.status(400).json({
-        message: `${key} missing ${value} in request body!`,
+        message: `${key} missing in request body!`,
       });
     }
     try {
       const db = req.app.get('db');
-      const userInDb = await AuthService.getUserName(db, reqUser.username);
+      const userInDb = await AuthService.getUserName(db, username);
       if (!userInDb) {
         res.status(400).json({
           message: 'Incorrect username and/or password!',
         });
       }
       const isPassword = await AuthService.comparePassword(
-        reqUser.password,
+        password,
         userInDb.password,
       );
       if (!isPassword) {
@@ -41,8 +41,7 @@ authRouter.route('/login').post(async (req, res, next) => {
         id: userInDb.id,
       });
     } catch (err) {
-      res.status(err.statusCode).send(err.message);
-      next();
+      next(err);
     }
   }
 });

@@ -19,7 +19,7 @@ employeeRouter.route('/employee').get(async (req, res, next) => {
 
 employeeRouter.get('/employee/:id', async (req, res, next) => {
   try {
-    const id = req.params.id;
+    const { id } = req.params;
     const person = await employeeService.getById(req.app.get('db'), id);
     if (!person) {
       throw new HttpException(404, `Cannot GET Employee ID ${id}`);

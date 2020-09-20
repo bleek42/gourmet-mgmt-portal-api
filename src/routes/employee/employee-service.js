@@ -1,9 +1,13 @@
 const employeeService = {
   getAll(db) {
-    return db.select('*').from('employee');
+    return db.select('*')
+      .from('employee');
   },
   getById(db, id) {
-    return db.select('*').from('employee').where({ id }).first();
+    return db.select('*')
+      .from('employee')
+      .where({ id })
+      .first();
   },
 };
 

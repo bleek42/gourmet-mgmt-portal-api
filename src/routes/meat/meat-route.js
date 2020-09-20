@@ -1,6 +1,6 @@
 const express = require('express');
-//const xss = require('xss');
-const meatService = require('./meat-service');
+// const xss = require('xss');
+const MeatService = require('./meat-service');
 
 const meatRouter = express.Router();
 
@@ -14,33 +14,33 @@ const serializeMeat = (meat) => ({
 });
 */
 
-meatRouter.route('/').get(async (req, res, next) => {
+meatRouter.route('/meat').get(async (req, res, next) => {
   try {
-    const meat = await meatService.getAllMeat(req.app.get('db'));
-    if (!meat) {
+    const meats = await MeatService.getAllMeat(req.app.get('db'));
+    if (!meats) {
       res.status(400).json({
         error: 'Cannot GET meat!',
       });
     }
-    res.status(200).json(meat);
+    res.status(200).json(meats);
   } catch (err) {
-    res.status(err.statusCode).send(err.message);
-    next();
+    next(err);
   }
 });
 
-meatRouter.route('/:id', async (req, res, next) => {
+meatRouter.route('/meat/:id').get(async (req, res, next) => {
   try {
-    const { id } = req.params.id;
-    const order = await meatService.getById(req.app.get('db'), id);
-    if (!order) {
+    const { id } = req.params;
+    console.log(id);
+    const item = await MeatService.getById(req.app.get('db'), id);
+    if (!item) {
       res.status(400).json({
         message: `Cannot GET meat order ID ${id}`,
       });
     }
+    res.status(200).json(item);
   } catch (err) {
-    res.status(err.statusCode).send(err.message);
-    next();
+    next(err);
   }
 });
 
