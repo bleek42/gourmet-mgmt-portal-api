@@ -9,8 +9,9 @@ const authRouter = express.Router();
 authRouter.route('/login').post(async (req, res, next) => {
   const { username, password } = req.body;
   const logins = { username, password };
+  console.log(req.body);
   for (const [key, value] of Object.entries(logins)) {
-    if (!value) {
+    if (value === null) {
       res.status(400).json({
         message: `${key} missing in request body!`,
       });
@@ -36,7 +37,7 @@ authRouter.route('/login').post(async (req, res, next) => {
       const payload = {
         id: userInDb.id,
       };
-      res.status(200).json({
+      res.send({
         authToken: AuthService.createJwt(subject, payload),
         id: userInDb.id,
       });
