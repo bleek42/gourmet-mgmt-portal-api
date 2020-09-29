@@ -2,7 +2,6 @@ const express = require('express');
 const path = require('path');
 
 const UsersService = require('./users-service');
-const HttpException = require('../../utils/http-exception');
 
 const usersRouter = express.Router();
 
@@ -24,22 +23,22 @@ usersRouter.route('/users/:id').get(async (req, res, next) => {
 
 usersRouter.route('/users/new').post(async (req, res, next) => {
   const { username, password, email } = req.body;
-  console.log(username, email, password);
-  for (const values of ['username', 'email', 'password']) {
-    if (!req.body[values]) {
+  const db = req.app.get('db');
+  // console.log(username, email, password);
+  for (const value of ['username', 'email', 'password']) {
+    if (!req.body[value]) {
       res.status(400).json({
-        Error: `Missing ${values} in request body!`,
+        Error: `Missing ${value} in request body!`,
       });
     }
   }
   try {
-    const passWordErr = await UsersService.validatePassword(password);
-    console.log(passWordErr);
+    const passWordErr = UsersService.validatePassword(password);
     if (passWordErr) {
-      res.status(400).json({ Error: `${password} does not meet requirements` });
+      res.status(400).json({ Error: passWordErr });
     }
 
-    const isExistingUser = await UsersService.checkUsers(req.app.get('db', username));
+    const isExistingUser = await UsersService.checkUsers(db, username);
     if (isExistingUser) {
       res.status(400).json({
         Error: `${username} is taken by an existing user!`,
@@ -54,10 +53,9 @@ usersRouter.route('/users/new').post(async (req, res, next) => {
       email,
     };
 
-    const userToAdd = await UsersService.insertUser(req.app.get('db'), newUser);
-
+    const userToAdd = await UsersService.insertUser(db, newUser);
     res.status(201)
-      .location(path.posix.join(req.originalUrl, `/${userToAdd.id}`))
+      .location(path.posix.join('/login'))
       .json(UsersService.sanitizeUser(userToAdd));
   } catch (err) {
     next(err);

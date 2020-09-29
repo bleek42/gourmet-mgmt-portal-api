@@ -9,6 +9,13 @@ const employeeService = {
       .where({ id })
       .first();
   },
+  addNew(db, newEmployee) {
+    return db
+      .insert(newEmployee)
+      .into('employee')
+      .returning('*')
+      .then(([employee]) => employee);
+  },
 };
 
 module.exports = employeeService;

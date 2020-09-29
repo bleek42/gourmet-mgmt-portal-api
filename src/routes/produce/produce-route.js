@@ -14,7 +14,7 @@ const serializeProduce = (produce) => ({
 });
 */
 
-produceRouter.route('/').get(async (req, res, next) => {
+produceRouter.route('/produce').get(async (req, res, next) => {
   try {
     const produce = await produceService.getAllProduce(req.app.get('db'));
     if (!produce) {
@@ -24,23 +24,22 @@ produceRouter.route('/').get(async (req, res, next) => {
     }
     res.status(200).json(produce);
   } catch (err) {
-    res.status(err.statusCode).send(err.message);
-    next();
+    next(err);
   }
 });
 
-produceRouter.route('/:id', async (req, res, next) => {
+produceRouter.route('/produce/:id').get(async (req, res, next) => {
   try {
     const { id } = req.params.id;
-    const order = await produceService.getById(req.app.get('db'), id);
-    if (!order) {
+    const item = await produceService.getById(req.app.get('db'), id);
+    if (!item) {
       res.status(400).json({
-        message: `Cannot GET produce order ID ${id}`,
+        message: `Cannot GET produce item ${id}`,
       });
     }
+    res.status(200).json(item);
   } catch (err) {
-    res.status(err.statusCode).send(err.message);
-    next();
+    next(err);
   }
 });
 
