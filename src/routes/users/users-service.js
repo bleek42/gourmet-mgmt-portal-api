@@ -13,7 +13,7 @@ const UsersService = {
 
   checkUsers(db, username) {
     return db
-      .select('users')
+      .from('users')
       .where({ username })
       .first()
       .then((user) => !!user);
@@ -29,7 +29,6 @@ const UsersService = {
 
   validatePassword(password) {
     // eslint-disable-next-line no-useless-escape
-    console.log(password);
     const PW_REGEX = /(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&])[\S]+/;
     if (password.length < 8) {
       return 'Password must be longer than 8 characters';

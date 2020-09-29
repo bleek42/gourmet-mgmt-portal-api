@@ -5,40 +5,40 @@ const UsersService = require('./users-service');
 
 const usersRouter = express.Router();
 
-// usersRouter.route('/users/:id').get(async (req, res, next) => {
-//   try {
-//     const { id } = req.params;
-//     console.log(id);
-//     const user = await UsersService.getUser(id);
-//     if (!user) {
-//       res.status(404).json({
-//         Error: `Cannot find user number ${id}`,
-//       });
-//     }
-//     res.status(200).json(user);
-//   } catch (err) {
-//     next(err);
-//   }
-// });
+usersRouter.route('/users/:id').get(async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    console.log(id);
+    const user = await UsersService.getUser(id);
+    if (!user) {
+      res.status(404).json({
+        Error: `Cannot find user number ${id}`,
+      });
+    }
+    res.status(200).json(user);
+  } catch (err) {
+    next(err);
+  }
+});
 
 usersRouter.route('/users/new').post(async (req, res, next) => {
   const { username, password, email } = req.body;
+  const db = req.app.get('db');
   // console.log(username, email, password);
-  for (const values of ['username', 'email', 'password']) {
-    if (!req.body[values]) {
+  for (const value of ['username', 'email', 'password']) {
+    if (!req.body[value]) {
       res.status(400).json({
-        Error: `Missing ${values} in request body!`,
+        Error: `Missing ${value} in request body!`,
       });
     }
   }
   try {
     const passWordErr = UsersService.validatePassword(password);
-    console.log(passWordErr);
     if (passWordErr) {
       res.status(400).json({ Error: passWordErr });
     }
 
-    const isExistingUser = await UsersService.checkUsers(req.app.get('db', username));
+    const isExistingUser = await UsersService.checkUsers(db, username);
     if (isExistingUser) {
       res.status(400).json({
         Error: `${username} is taken by an existing user!`,
@@ -53,8 +53,7 @@ usersRouter.route('/users/new').post(async (req, res, next) => {
       email,
     };
 
-    const userToAdd = await UsersService.insertUser(req.app.get('db'), newUser);
-    console.log(userToAdd);
+    const userToAdd = await UsersService.insertUser(db, newUser);
     res.status(201)
       .location(path.posix.join('/login'))
       .json(UsersService.sanitizeUser(userToAdd));

@@ -18,14 +18,14 @@ authRouter.route('/login').post(async (req, res, next) => {
     }
     try {
       const db = req.app.get('db');
-      const userInDb = await AuthService.getUserName(db, username);
+      const userInDb = await AuthService.getUserName(db, logins.username);
       if (!userInDb) {
         res.status(400).json({
           message: 'Incorrect username and/or password!',
         });
       }
       const isPassword = await AuthService.comparePassword(
-        password,
+        logins.password,
         userInDb.password,
       );
       if (!isPassword) {
@@ -33,7 +33,7 @@ authRouter.route('/login').post(async (req, res, next) => {
           message: 'Incorrect username and/or passsword!',
         });
       }
-      const subject = userInDb.id;
+      const subject = logins.username;
       const payload = {
         id: userInDb.id,
       };
