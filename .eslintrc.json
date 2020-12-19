@@ -10,7 +10,7 @@
   },
   "rules": {
     "linebreak-style": "off",
-    "brace-style": "warn",
+    "brace-style": "off",
     "strict": "off",
     "semi-style": "warn",
     "no-console": "warn",

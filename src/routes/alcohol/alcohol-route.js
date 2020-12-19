@@ -36,12 +36,29 @@ alcoholRouter.route('/:id', async (req, res, next) => {
     const order = await alcoholService.getById(req.app.get('db'), id);
     if (!order) {
       res.status(400).json({
-        message: `Cannot GET alcohol order ID ${id}`,
+        message: `Cannot GET alcohol ID ${id}`,
       });
     }
-  } catch (err) {
-    res.status(err.statusCode).send(err.message);
-    next();
+    res.status(200).json(id);
+  }
+  catch (err) {
+    next(err);
+  }
+});
+
+alcoholRouter.route('/type', async (req, res, next) => {
+  try {
+    console.log(req.query);
+    const { type } = req.query;
+    if (!type) {
+      res.status(400).json({
+        message: `Cannot GET alcohol type ${type}`,
+      });
+    }
+    res.status(200).json(type);
+  }
+  catch (err) {
+    next(err);
   }
 });
 
