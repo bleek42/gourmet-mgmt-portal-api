@@ -1,5 +1,5 @@
 const express = require('express');
-//const xss = require('xss');
+// const xss = require('xss');
 const alcoholService = require('./alcohol-service');
 
 const alcoholRouter = express.Router();
@@ -50,7 +50,8 @@ alcoholRouter.route('/type', async (req, res, next) => {
   try {
     console.log(req.query);
     const { type } = req.query;
-    if (!type) {
+    const query = await alcoholService.getByType(req.app.get('db'), type);
+    if (!query) {
       res.status(400).json({
         message: `Cannot GET alcohol type ${type}`,
       });

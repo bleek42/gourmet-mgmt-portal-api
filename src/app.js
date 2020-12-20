@@ -32,7 +32,7 @@ app.use(validateToken);
 
 app.use('/api', authRouter);
 app.use('/api', employeeRouter);
-app.use('/api', alcoholRouter);
+app.use('/api/alcohol', alcoholRouter);
 app.use('/api', produceRouter);
 app.use('/api', meatRouter);
 app.use('/api', usersRouter);
