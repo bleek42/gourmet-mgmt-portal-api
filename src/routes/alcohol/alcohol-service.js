@@ -4,12 +4,13 @@ const alcoholService = {
   },
 
   getById(db, id) {
-    return db('alcohol').select('*').where(id).first();
+    console.log(id);
+    return db.from('alcohol').select('*').where('id', id).first();
   },
 
-  getByType(db, query) {
-    console.log(query.type);
-    return db('alcohol').select('type').where('type', query.type);
+  getByType(db, type) {
+    console.log(type);
+    return db('alcohol').select('*').where('type', type);
   },
 };
 
