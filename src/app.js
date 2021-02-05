@@ -4,8 +4,11 @@ const express = require('express');
 const morgan = require('morgan');
 const cors = require('cors');
 const helmet = require('helmet');
+const { ApolloServer } = require('apollo-server-express');
 
 const { NODE_ENV } = require('./config');
+
+const typeDefs = require('./graphql/typeDefs');
 
 const authRouter = require('./routes/auth/auth-route');
 const employeeRouter = require('./routes/employee/employee-route');
@@ -31,11 +34,17 @@ app.use(cors());
 app.use(validateToken);
 
 app.use('/api', authRouter);
-app.use('/api', employeeRouter);
-app.use('/api', alcoholRouter);
-app.use('/api', produceRouter);
-app.use('/api', meatRouter);
-app.use('/api', usersRouter);
+app.use('/api/employee', employeeRouter);
+app.use('/api/alcohol', alcoholRouter);
+app.use('/api/produce', produceRouter);
+app.use('/api/meat', meatRouter);
+app.use('/api/user', usersRouter);
+
+const server = new ApolloServer({
+  typeDefs,
+});
+
+server.applyMiddleware({ app });
 
 app.use(errorHandler);
 

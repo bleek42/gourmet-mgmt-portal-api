@@ -16,6 +16,7 @@
     "no-console": "warn",
     "no-unused-vars": "warn",
     "no-restricted-syntax": "off",
-    "new-cap": "off"
+    "new-cap": "off",
+    "consistent-return": "off"
   }
 }

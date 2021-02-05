@@ -14,7 +14,7 @@ const serializeMeat = (meat) => ({
 });
 */
 
-meatRouter.route('/meat').get(async (req, res, next) => {
+meatRouter.route('/').get(async (req, res, next) => {
   try {
     const meats = await MeatService.getAllMeat(req.app.get('db'));
     if (!meats) {
@@ -28,7 +28,7 @@ meatRouter.route('/meat').get(async (req, res, next) => {
   }
 });
 
-meatRouter.route('/meat/:id').get(async (req, res, next) => {
+meatRouter.route('/:id').get(async (req, res, next) => {
   try {
     const { id } = req.params;
     console.log(id);

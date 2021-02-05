@@ -14,7 +14,7 @@ const serializeProduce = (produce) => ({
 });
 */
 
-produceRouter.route('/produce').get(async (req, res, next) => {
+produceRouter.route('/').get(async (req, res, next) => {
   try {
     const produce = await produceService.getAllProduce(req.app.get('db'));
     if (!produce) {
@@ -28,7 +28,7 @@ produceRouter.route('/produce').get(async (req, res, next) => {
   }
 });
 
-produceRouter.route('/produce/:id').get(async (req, res, next) => {
+produceRouter.route('/:id').get(async (req, res, next) => {
   try {
     const { id } = req.params.id;
     const item = await produceService.getById(req.app.get('db'), id);

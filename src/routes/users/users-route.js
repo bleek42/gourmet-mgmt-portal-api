@@ -5,7 +5,7 @@ const UsersService = require('./users-service');
 
 const usersRouter = express.Router();
 
-usersRouter.route('/users/:id').get(async (req, res, next) => {
+usersRouter.route('/:id').get(async (req, res, next) => {
   try {
     const { id } = req.params;
     console.log(id);
@@ -21,7 +21,7 @@ usersRouter.route('/users/:id').get(async (req, res, next) => {
   }
 });
 
-usersRouter.route('/users/new').post(async (req, res, next) => {
+usersRouter.route('/new').post(async (req, res, next) => {
   const { username, password, email } = req.body;
   const db = req.app.get('db');
   // console.log(username, email, password);
