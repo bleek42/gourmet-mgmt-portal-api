@@ -11,9 +11,21 @@ type Employee {
   department: String
 }
 
+enum AlcoholType {
+  VODKA
+  WHISKEY
+  GIN
+  TEQUILA
+  BRANDY
+  RUM
+  SCOTCH
+  LIQUEURS
+  OTHER
+}
+
 type Alcohol {
   id: Int!
-  type: String!
+  type: [AlcoholType]!
   price: Float!
   name: String!
   quantity: Int!
@@ -43,6 +55,7 @@ type User {
 type Query {
   employees: [Employee]!
   alcohol: [Alcohol]!
+  alchoholType(type: AlcoholType!): [Alcohol]
   produce: [Produce]!
   meat: [Meat]!
   user(id: Int!): User
